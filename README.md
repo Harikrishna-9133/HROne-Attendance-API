@@ -24,3 +24,58 @@ MongoDB **6.0 or newer** is required (the grader uses 7.0). MongoDB Atlas free t
 ## Submit
 A public Git repository with `app/main.py`, `requirements.txt`, `REVIEW.md`, `DECISIONS.md` and a short `README.md`.
 No `.env`, no secrets, no Dockerfile.
+
+## Setup and Run
+
+### Prerequisites
+- Python 3.11 or compatible Python version
+- MongoDB running locally, or access to a MongoDB instance
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Harikrishna-9133/HROne-Attendance-API.git
+cd HROne-Attendance-API
+```
+
+### 2. Create and activate a virtual environment
+
+**Windows PowerShell**
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### 4. Configure environment variables
+
+Copy `.env.example` to `.env`.
+
+**Windows PowerShell**
+```powershell
+Copy-Item .env.example .env
+```
+
+Update `MONGO_URI` in `.env` with your MongoDB connection string if needed. Set `MONGO_DB` to your preferred database name.
+
+For MongoDB Atlas, configure database access and network access for the machine running the application. Do not commit your credentials to GitHub.
+
+### 5. Start the API
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+### 6. Open the API documentation
+
+Visit:
+
+http://127.0.0.1:8000/docs
+
+Use the interactive Swagger UI to explore and test the API endpoints.
+
