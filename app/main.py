@@ -146,6 +146,7 @@ def create_indexes():
     employees.create_index([("emp_code", ASCENDING)], unique=True, name="uq_employee_code")
     employees.create_index([("department", ASCENDING), ("emp_code", ASCENDING)], name="ix_employee_department_code")
     employees.create_index([("department", ASCENDING), ("joined_on", ASCENDING)], name="ix_employee_department_joined")
+
     employees.create_index([("joined_on", ASCENDING)], name="ix_employee_joined_on")
     logs.create_index([("emp_code", ASCENDING), ("date", ASCENDING)], unique=True, name="uq_attendance_employee_date")
     logs.create_index([("date", DESCENDING), ("emp_code", ASCENDING)], name="ix_attendance_date_employee")
@@ -306,8 +307,13 @@ def punch_out(body: PunchOutIn):
     if not emp:
         raise HTTPException(404, "Employee not found")
     ts = from_ms(body.punched_at)
+    target_date = attendance_date(ts, emp)
     record = logs.find_one(
-        {"emp_code": body.emp_code, "punch_in": {"$lte": ts}},
+        {
+            "emp_code": body.emp_code,
+            "date": target_date,
+            "punch_in": {"$lte": ts},
+        },
         sort=[("punch_in", DESCENDING)],
     )
     if not record:
